@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Love King PRO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --red:#DC143C; --red2:#FF3355; --red3:#8B0020;
+      --bg:#080808; --bg2:#101010; --bg3:#181818; --bg4:#222;
+      --border:rgba(220,20,60,0.12); --border2:rgba(220,20,60,0.28);
+      --text:#f5f0f0; --text2:#c0a8a8; --text3:#7a5858;
+      --success:#22c55e; --r:14px;
+    }
+
+    @keyframes fadeUp   { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes pulse-dot{ 0%,100%{transform:scale(1)} 50%{transform:scale(1.5)} }
+    @keyframes float    { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+    @keyframes mic-pulse{ 0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.3)} 50%{box-shadow:0 0 0 7px rgba(239,68,68,0)} }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    *::-webkit-scrollbar{width:3px}
+    *::-webkit-scrollbar-track{background:transparent}
+    *::-webkit-scrollbar-thumb{background:rgba(220,20,60,.25);border-radius:4px}
+    html,body{width:100%;height:100vh;overflow:hidden}
+    body{background:var(--bg);font-family:'Outfit',-apple-system,sans-serif;color:var(--text);-webkit-font-smoothing:antialiased}
+
+    /* ═══════════════════════════════════════
+       LICENSE SCREEN
+    ═══════════════════════════════════════ */
+    #licenseScreen {
+      display:flex; flex-direction:column; height:100%;
+      background:#080808; overflow:hidden;
+    }
+    .lic-hero {
+      position:relative; width:100%; height:200px; flex-shrink:0; overflow:hidden;
+    }
+    .lic-hero img {
+      width:100%; height:100%; object-fit:cover; object-position:center top;
+      filter:brightness(0.72);
+    }
+    .lic-hero-overlay {
+      position:absolute; inset:0;
+      background:linear-gradient(to bottom, rgba(8,8,8,0) 0%, rgba(8,8,8,.4) 60%, rgba(8,8,8,1) 100%);
+    }
+    .lic-hero-badge {
+      position:absolute; top:12px; right:12px;
+      display:inline-flex; align-items:center; gap:5px;
+      background:rgba(0,0,0,.6); backdrop-filter:blur(8px);
+      border:1px solid rgba(220,20,60,.4); border-radius:20px;
+      padding:4px 10px; font-size:10px; font-weight:700; color:#ff7090; letter-spacing:.5px;
+    }
+    .lic-hero-badge::before {
+      content:''; width:6px; height:6px; border-radius:50%; background:#DC143C;
+      animation:pulse-dot 1.5s infinite;
+    }
+    .lic-card {
+      flex:1; display:flex; flex-direction:column;
+      padding:18px 20px 14px; background:var(--bg);
+      animation:fadeUp .45s ease; overflow:hidden;
+    }
+    .lic-brand {
+      display:flex; align-items:center; gap:9px; margin-bottom:14px;
+    }
+    .lic-brand-icon {
+      width:34px; height:34px; border-radius:9px; overflow:hidden; flex-shrink:0;
+      border:1.5px solid var(--border2);
+    }
+    .lic-brand-icon img { width:100%; height:100%; object-fit:cover; }
+    .lic-brand-name { font-size:16px; font-weight:800; letter-spacing:-.3px; color:#fff; }
+    .lic-brand-name span { color:var(--red2); }
+    .lic-brand-tag {
+      margin-left:auto; font-size:9px; font-weight:700; letter-spacing:1px;
+      color:var(--red2); text-transform:uppercase;
+      border:1px solid rgba(220,20,60,.3); border-radius:20px; padding:2px 8px;
+    }
+    .lic-divider {
+      height:1px; background:linear-gradient(90deg,transparent,var(--border2),transparent);
+      margin-bottom:16px;
+    }
+    .lic-headline { font-size:13px; font-weight:600; color:var(--text); margin-bottom:4px; }
+    .lic-sub { font-size:11.5px; color:var(--text3); margin-bottom:16px; line-height:1.5; }
+    .lic-input-wrap { position:relative; margin-bottom:10px; }
+    .lic-input-wrap input {
+      width:100%; padding:12px 14px 12px 40px;
+      border-radius:10px; border:1.5px solid var(--border2);
+      background:var(--bg3); color:var(--text);
+      font-size:13px; font-family:'SF Mono',monospace;
+      text-align:center; letter-spacing:2.5px; text-transform:uppercase; transition:all .2s;
+    }
+    .lic-input-wrap input:focus {
+      outline:none; border-color:var(--red);
+      box-shadow:0 0 0 3px rgba(220,20,60,.1); background:rgba(220,20,60,.03);
+    }
+    .lic-input-wrap input::placeholder { color:var(--text3); letter-spacing:1px; font-size:11px; }
+    .lic-input-icon { position:absolute; left:13px; top:50%; transform:translateY(-50%); color:var(--text3); }
+    .lic-input-icon svg { width:15px; height:15px; }
+    #licenseStatus { font-size:12px; min-height:18px; margin-bottom:11px; text-align:center; font-weight:500; }
+    .btn-activate {
+      width:100%; padding:13px; font-size:14px; font-weight:700; font-family:'Outfit',sans-serif;
+      border-radius:10px; border:none; cursor:pointer;
+      background:linear-gradient(135deg,#8B0020,#DC143C,#FF3355);
+      color:#fff; transition:all .25s;
+      box-shadow:0 4px 22px rgba(220,20,60,.35); letter-spacing:.3px;
+    }
+    .btn-activate:hover { transform:translateY(-1px); box-shadow:0 6px 28px rgba(220,20,60,.5); }
+    .btn-activate:active { transform:scale(.98); }
+    .btn-activate:disabled { background:var(--bg3); color:var(--text3); cursor:not-allowed; box-shadow:none; transform:none; }
+    .lic-security {
+      display:flex; align-items:center; justify-content:center; gap:5px;
+      margin-top:12px; font-size:10px; color:var(--text3);
+    }
+    .lic-security svg { width:11px; height:11px; stroke:var(--success); }
+    .lic-security span { color:var(--success); font-weight:600; }
+    .lic-footer-row {
+      margin-top:auto; padding-top:10px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:10px; color:var(--text3); gap:5px;
+    }
+    .lic-footer-dot { width:3px; height:3px; border-radius:50%; background:var(--text3); }
+
+    /* ═══════════════════════════════════════
+       MAIN APP
+    ═══════════════════════════════════════ */
+    #mainApp {
+      display:none; flex-direction:row; height:100vh;
+      background:var(--bg); overflow:hidden;
+    }
+
+    /* === SIDEBAR === */
+
+    .lkp-sidebar {
+      width:48px; flex-shrink:0; height:100%;
+      background:var(--bg2);
+      border-right:1px solid var(--border);
+      display:flex; flex-direction:column; align-items:flex-start;
+      padding:8px 0 8px; gap:1px;
+      overflow:visible;        /* allow buttons to expand over main content */
+      position:relative; z-index:200;
+    }
+    .lkp-sidebar-logo {
+      width:30px; height:30px; border-radius:8px; overflow:hidden;
+      margin:0 auto 5px; flex-shrink:0; border:1.5px solid var(--border2);
+    }
+    .lkp-sidebar-logo img { width:100%; height:100%; object-fit:cover; }
+    .lkp-sidebar-sep {
+      width:26px; height:1px; background:var(--border); margin:3px 7px; flex-shrink:0;
+    }
+
+    /* Base for ALL sidebar interactive buttons */
+    .lkp-sb-btn,
+    .lkp-sb-action,
+    .lkp-sb-logout {
+      height:34px; min-width:34px; width:34px;
+      border-radius:8px; border:none;
+      background:transparent; cursor:pointer;
+      display:flex; align-items:center; justify-content:flex-start;
+      color:var(--text3); transition: width .28s cubic-bezier(.4,0,.2,1),
+                                       background .18s, color .18s;
+      position:relative; flex-shrink:0;
+      padding:0 9px; gap:0; overflow:hidden;
+      white-space:nowrap; margin:0 1px;
+    }
+    /* SVGs stay fixed size */
+    .lkp-sb-btn svg,
+    .lkp-sb-action svg,
+    .lkp-sb-logout svg {
+      width:15px; height:15px; flex-shrink:0; pointer-events:none;
+    }
+    .lkp-sb-action svg { width:14px; height:14px; }
+
+    /* Label span — hidden by default, slides in on hover */
+    .lkp-btn-label {
+      font-size:10.5px; font-weight:700;
+      font-family:'Outfit',sans-serif;
+      letter-spacing:.3px; white-space:nowrap;
+      opacity:0; max-width:0; overflow:hidden;
+      transition: max-width .28s cubic-bezier(.4,0,.2,1),
+                  opacity .2s .05s,
+                  margin-left .28s cubic-bezier(.4,0,.2,1);
+      margin-left:0;
+      pointer-events:none;
+    }
+
+    /* On hover: expand button and show label */
+    .lkp-sb-btn:hover,
+    .lkp-sb-action:hover,
+    .lkp-sb-logout:hover {
+      width:140px;
+      background:rgba(220,20,60,.1);
+      color:var(--red2);
+      box-shadow: 2px 0 14px rgba(0,0,0,.35);
+    }
+    .lkp-sb-btn:hover .lkp-btn-label,
+    .lkp-sb-action:hover .lkp-btn-label,
+    .lkp-sb-logout:hover .lkp-btn-label {
+      opacity:1; max-width:110px; margin-left:8px;
+    }
+    .lkp-sb-btn:active, .lkp-sb-action:active { transform:scale(.95); }
+
+    /* Active state (chat) */
+    .lkp-sb-btn.active {
+      background:rgba(220,20,60,.18); color:var(--red);
+    }
+    .lkp-sb-btn.active::before {
+      content:''; position:absolute; left:0; top:50%; transform:translateY(-50%);
+      width:2px; height:16px; background:var(--red); border-radius:0 2px 2px 0;
+      flex-shrink:0;
+    }
+
+    /* Special colours */
+    .lkp-sb-publish { color:#10b981 !important; }
+    .lkp-sb-publish:hover { background:rgba(16,185,129,.12) !important; color:#10b981 !important; }
+    .lkp-sb-publish:hover .lkp-btn-label { color:#10b981; }
+
+    .lkp-sb-logout:hover { background:rgba(239,68,68,.1) !important; color:#f87171 !important; }
+    .lkp-sb-logout:hover .lkp-btn-label { color:#f87171; }
+    .lkp-sb-logout { margin-top:auto; }
+
+    /* Language selector button */
+    #langBtn { color:#7a9bdc; }
+    #langBtn:hover { background:rgba(100,149,237,.12) !important; color:#90b8ff !important; }
+    #langBtn:hover .lkp-btn-label { color:#90b8ff; }
+
+    /* Language dropdown */
+    #langDropdown {
+      display:none; position:absolute;
+      left:calc(100% + 6px); bottom:0;
+      background:#181818; border:1px solid rgba(220,20,60,.25);
+      border-radius:10px; overflow:hidden;
+      box-shadow:0 8px 32px rgba(0,0,0,.6);
+      z-index:9999; min-width:160px;
+      animation:fadeUp .18s ease;
+    }
+    #langDropdown.open { display:block; }
+    .lang-opt {
+      display:flex; align-items:center; gap:9px;
+      padding:9px 13px; cursor:pointer;
+      font-size:12px; font-weight:600; color:var(--text2);
+      font-family:'Outfit',sans-serif;
+      transition:background .15s;
+      border-bottom:1px solid rgba(255,255,255,.05);
+    }
+    .lang-opt:last-child { border-bottom:none; }
+    .lang-opt:hover { background:rgba(220,20,60,.1); color:#fff; }
+    .lang-opt.active { color:var(--red2); background:rgba(220,20,60,.08); }
+    .lang-opt.active::after { content:'✓'; margin-left:auto; font-size:11px; color:var(--red2); }
+    .lang-flag { font-size:16px; }
+    #langSeparator { width:26px; height:1px; background:var(--border); margin:3px 7px; flex-shrink:0; }
+
+    /* === MAIN PANEL === */
+    .lkp-main {
+      flex:1; display:flex; flex-direction:column; height:100%; overflow:hidden; min-width:0;
+    }
+
+    /* Topbar */
+    .lkp-topbar {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:7px 10px; background:var(--bg2);
+      border-bottom:1px solid var(--border);
+      flex-shrink:0; gap:4px;
+    }
+    .lkp-topbar-title {
+      font-size:12px; font-weight:700; color:var(--text);
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0;
+    }
+    .lkp-topbar-right { display:flex; align-items:center; gap:4px; flex-shrink:0; }
+    #licenseInfo {
+      display:inline-flex; align-items:center; gap:4px;
+      background:rgba(34,197,94,.08); border:1px solid rgba(34,197,94,.2);
+      color:var(--success); border-radius:20px; padding:3px 8px;
+      font-size:10px; font-weight:600; white-space:nowrap;
+    }
+    #licenseInfo::before {
+      content:''; width:5px; height:5px; border-radius:50%;
+      background:var(--success); animation:pulse-dot 2s infinite; flex-shrink:0;
+    }
+
+    /* Banner */
+    .lkp-banner {
+      flex-shrink:0; overflow:hidden; position:relative; height:130px;
+    }
+    .lkp-banner img {
+      width:100%; height:100%; object-fit:cover; object-position:center 25%;
+      display:block;
+    }
+    .lkp-banner-overlay {
+      position:absolute; inset:0;
+      background:linear-gradient(90deg,rgba(8,8,8,.5) 0%,transparent 50%,rgba(8,8,8,.15) 100%);
+      pointer-events:none;
+    }
+
+    /* Chat area */
+    #chatPanel { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+    #chatPanel.hidden { display:none; }
+    #history {
+      flex:1; overflow-y:auto; padding:12px 10px;
+      display:flex; flex-direction:column; gap:8px;
+    }
+    .empty-state {
+      display:flex; flex-direction:column; align-items:center;
+      justify-content:center; height:100%; gap:8px; padding:20px;
+    }
+    .empty-state-icon {
+      width:44px; height:44px; border-radius:12px;
+      background:rgba(220,20,60,.08); border:1px solid var(--border2);
+      display:flex; align-items:center; justify-content:center;
+      animation:float 3s ease-in-out infinite;
+    }
+    .empty-state-icon svg { width:20px; height:20px; stroke:var(--red2); }
+    .empty-state h3 { font-size:13px; color:var(--text2); font-weight:600; }
+    .empty-state p { font-size:11px; color:var(--text3); text-align:center; line-height:1.5; }
+
+    #quickSuggestions { display:none; flex-wrap:wrap; gap:5px; padding:4px 10px; flex-shrink:0; }
+    .qs-chip {
+      background:rgba(220,20,60,.06); border:1px solid rgba(220,20,60,.18);
+      color:#FF5070; border-radius:12px; padding:3px 9px;
+      font-size:10.5px; cursor:pointer; transition:all .2s;
+      max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+      font-family:'Outfit',sans-serif;
+    }
+    .qs-chip:hover { background:rgba(220,20,60,.14); }
+
+    /* Bubbles */
+    .message-wrapper { display:flex; animation:fadeUp .2s ease; }
+    .message-wrapper.user { justify-content:flex-end; }
+    .message-wrapper.bot  { justify-content:flex-start; }
+    .bubble {
+      max-width:85%; padding:9px 12px; border-radius:14px;
+      font-size:12.5px; line-height:1.55;
+      word-wrap:break-word; word-break:break-word; white-space:pre-wrap;
+    }
+    .bubble.user {
+      background:linear-gradient(135deg,#8B0020,#DC143C);
+      color:#fff; border-bottom-right-radius:3px;
+      box-shadow:0 2px 10px rgba(220,20,60,.25);
+    }
+    .bubble.bot {
+      background:var(--bg3); color:var(--text);
+      border:1px solid var(--border); border-bottom-left-radius:3px;
+    }
+
+    #status { padding:3px 10px; font-size:10px; color:var(--text3); flex-shrink:0; min-height:14px; }
+    #filePreview { display:none; flex-wrap:wrap; gap:6px; padding:6px 10px 2px; flex-shrink:0; }
+    .file-chip {
+      display:flex; align-items:center; gap:6px;
+      background:var(--bg3); border:1px solid var(--border);
+      border-radius:8px; padding:3px 8px; font-size:10px; color:var(--text2);
+      position:relative;
+    }
+    /* Image chip — shows a thumbnail */
+    .file-chip.is-image {
+      padding:4px; flex-direction:column; align-items:center;
+      border-color:rgba(220,20,60,.35); max-width:80px;
+    }
+    .file-chip-thumb {
+      width:68px; height:68px; object-fit:cover;
+      border-radius:6px; display:block;
+    }
+    .file-chip-name {
+      font-size:9px; color:var(--text3); width:68px;
+      overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+      text-align:center; padding:2px 0;
+    }
+    .file-chip-remove {
+      position:absolute; top:-6px; right:-6px;
+      width:17px; height:17px; border-radius:50%;
+      background:#dc143c; border:1.5px solid #0a0a0a; color:#fff;
+      font-size:10px; line-height:1; text-align:center;
+      cursor:pointer; padding:0;
+      display:flex; align-items:center; justify-content:center;
+      box-shadow:0 1px 5px rgba(0,0,0,.5);
+    }
+    .file-chip-remove:hover { background:#ff2a4d; }
+    /* Non-image chip remove button */
+    .file-chip:not(.is-image) .file-chip-remove {
+      position:static; width:auto; height:auto; border-radius:0;
+      background:none; border:none; color:#ef4444;
+      font-size:13px; box-shadow:none; padding:0 2px;
+    }
+
+
+    /* Input */
+    .lkp-input-area {
+      display:flex; flex-direction:column; gap:4px;
+      padding:7px 8px 9px; border-top:1px solid var(--border);
+      background:var(--bg2); flex-shrink:0;
+    }
+    .lkp-input-top {
+      display:flex; align-items:center; justify-content:space-between; margin-bottom:2px;
+    }
+    .lkp-input-label { font-size:9px; color:var(--text3); font-weight:600; letter-spacing:.6px; text-transform:uppercase; }
+    #enhanceBtn {
+      background:rgba(220,20,60,.07); border:1px solid rgba(220,20,60,.2);
+      color:#FF5070; border-radius:10px; padding:3px 8px;
+      font-size:10px; font-weight:600; cursor:pointer;
+      display:inline-flex; align-items:center; gap:3px;
+      transition:all .2s; white-space:nowrap; font-family:'Outfit',sans-serif;
+    }
+    #enhanceBtn:hover { background:rgba(220,20,60,.15); }
+    #enhanceBtn.loading { opacity:.5; pointer-events:none; }
+
+    .lkp-input-row { display:flex; align-items:flex-end; gap:5px; }
+    #attachBtn, #micBtn {
+      background:rgba(220,20,60,.07); border:1.5px solid rgba(220,20,60,.22);
+      color:var(--red); border-radius:9px; width:34px; height:34px; min-width:34px;
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer; padding:0; flex-shrink:0; transition:all .2s;
+    }
+    #attachBtn:hover, #micBtn:hover { background:rgba(220,20,60,.16); transform:scale(1.05); }
+    #attachBtn svg, #micBtn svg { width:15px; height:15px; }
+    #micBtn.recording {
+      background:rgba(239,68,68,.15); border-color:rgba(239,68,68,.5); color:#f87171;
+      animation:mic-pulse 1.2s ease-in-out infinite;
+    }
+    #message {
+      flex:1; min-width:0; min-height:36px; max-height:35vh; resize:none;
+      border:1.5px solid var(--border2); border-radius:9px;
+      background:var(--bg3); color:var(--text);
+      padding:8px 10px; font-size:12.5px; font-family:'Outfit',sans-serif;
+      line-height:1.5; word-wrap:break-word; overflow-y:auto; transition:border-color .2s;
+    }
+    #message:focus { outline:none; border-color:var(--red); box-shadow:0 0 0 3px rgba(220,20,60,.09); }
+    #message::placeholder { color:var(--text3); }
+    #sendBtn {
+      background:linear-gradient(135deg,#8B0020,#DC143C);
+      color:#fff; border:none; border-radius:9px;
+      width:34px; height:34px; min-width:34px;
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer; padding:0; flex-shrink:0;
+      box-shadow:0 3px 12px rgba(220,20,60,.4); transition:all .2s;
+    }
+    #sendBtn:hover { transform:scale(1.08); box-shadow:0 5px 18px rgba(220,20,60,.55); }
+    #sendBtn:active { transform:scale(.95); }
+    #sendBtn:disabled { background:rgba(220,20,60,.1); box-shadow:none; cursor:not-allowed; }
+    #sendBtn svg { width:15px; height:15px; }
+
+    .lkp-footer {
+      text-align:center; padding:4px;
+      font-size:9px; color:var(--text3);
+      flex-shrink:0; border-top:1px solid var(--border); letter-spacing:.2px;
+    }
+
+    /* Toast */
+    .toast {
+      position:fixed; bottom:60px; left:50%;
+      transform:translateX(-50%) translateY(70px);
+      background:var(--bg4); color:var(--text);
+      padding:8px 14px; border-radius:10px;
+      font-size:11.5px; font-weight:500;
+      border:1px solid var(--border); opacity:0;
+      transition:all .25s ease; z-index:10000;
+    }
+    .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ LICENSE SCREEN ═══ -->
+  <div id="licenseScreen">
+    <div class="lic-hero">
+      <img src="banner.png" alt="Love King PRO">
+      <div class="lic-hero-overlay"></div>
+      <div class="lic-hero-badge">PRO</div>
+    </div>
+    <div class="lic-card">
+      <div class="lic-brand">
+        <div class="lic-brand-icon"><img src="logo.png" alt="LKP"></div>
+        <div class="lic-brand-name">Love<span>King</span> PRO</div>
+        <div class="lic-brand-tag">Premium</div>
+      </div>
+      <div class="lic-divider"></div>
+      <div class="lic-headline">Bem-vindo de volta 👑</div>
+      <div class="lic-sub">Insira sua chave de licença para acessar todos os recursos premium.</div>
+      <div class="lic-input-wrap">
+        <div class="lic-input-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        </div>
+        <input type="text" id="licenseKey" placeholder="XXXXX-XXXXX-XXXXX-XXXXX" maxlength="23" autocomplete="off">
+      </div>
+      <div id="licenseStatus"></div>
+      <button id="activateBtn" class="btn-activate">🔓 Ativar Licença</button>
+      <div class="lic-security">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+        <span>Conexão segura</span> · criptografia de ponta a ponta
+      </div>
+      <div class="lic-footer-row">
+        <span>Love King PRO</span>
+        <div class="lic-footer-dot"></div>
+        <span>© 2025</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ MAIN APP ═══ -->
+  <div id="mainApp">
+
+    <!-- SIDEBAR — todos os botões aqui -->
+    <aside class="lkp-sidebar">
+
+      <!-- Logo -->
+      <div class="lkp-sidebar-logo"><img src="logo.png" alt="LKP"></div>
+
+      <div class="lkp-sidebar-sep"></div>
+
+      <!-- Chat (ativo) -->
+      <button class="lkp-sb-btn active" id="sb-chat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        <span class="lkp-btn-label">Chat</span>
+      </button>
+
+      <div class="lkp-sidebar-sep"></div>
+
+      <!-- Ações rápidas -->
+      <button class="lkp-sb-action" data-action="corrigir">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+        <span class="lkp-btn-label">Corrigir</span>
+      </button>
+      <button class="lkp-sb-action" data-action="refatorar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/><line x1="14" y1="4" x2="10" y2="20"/></svg>
+        <span class="lkp-btn-label">Refatorar</span>
+      </button>
+      <button class="lkp-sb-action" data-action="melhorar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <span class="lkp-btn-label">Melhorar</span>
+      </button>
+      <button class="lkp-sb-action" data-action="otimizar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        <span class="lkp-btn-label">Otimizar</span>
+      </button>
+      <button class="lkp-sb-action" data-action="seguranca">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+        <span class="lkp-btn-label">Segurança</span>
+      </button>
+      <button class="lkp-sb-action" data-action="responsivo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+        <span class="lkp-btn-label">Responsivo</span>
+      </button>
+
+      <div class="lkp-sidebar-sep"></div>
+
+      <!-- Utilitários -->
+      <button class="lkp-sb-btn lkp-sb-publish" id="publishBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <span class="lkp-btn-label">Publish</span>
+      </button>
+      <button class="lkp-sb-btn lkp-sb-download" id="downloadBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span class="lkp-btn-label">Download</span>
+      </button>
+      <button class="lkp-sb-btn lkp-sb-watermark" id="removeWatermarkBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/></svg>
+        <span class="lkp-btn-label">Sem Marca d'Água</span>
+      </button>
+      <button class="lkp-sb-btn" id="clearBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+        <span class="lkp-btn-label">Limpar Chat</span>
+      </button>
+
+      <!-- Idioma -->
+      <div id="langSeparator"></div>
+      <div style="position:relative">
+        <button class="lkp-sb-btn" id="langBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+          <span class="lkp-btn-label" id="langBtnLabel">Idioma</span>
+        </button>
+        <div id="langDropdown">
+          <div class="lang-opt active" data-lang="pt">
+            <span class="lang-flag">🇧🇷</span> Português
+          </div>
+          <div class="lang-opt" data-lang="en">
+            <span class="lang-flag">🇺🇸</span> English
+          </div>
+          <div class="lang-opt" data-lang="es">
+            <span class="lang-flag">🇪🇸</span> Español
+          </div>
+        </div>
+      </div>
+
+      <!-- Sair -->
+      <button class="lkp-sb-logout" id="logoutBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        <span class="lkp-btn-label">Sair</span>
+      </button>
+    </aside>
+
+    <!-- MAIN PANEL -->
+    <div class="lkp-main">
+
+      <!-- Topbar -->
+      <div class="lkp-topbar">
+        <span class="lkp-topbar-title">Love King PRO</span>
+        <div class="lkp-topbar-right">
+          <span id="licenseInfo">--</span>
+        </div>
+      </div>
+
+      <!-- Banner maior -->
+      <div class="lkp-banner">
+        <img src="banner.png" alt="Love King PRO">
+        <div class="lkp-banner-overlay"></div>
+      </div>
+
+      <!-- Chat -->
+      <div id="chatPanel">
+        <div id="history">
+          <div class="empty-state">
+            <div class="empty-state-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            </div>
+            <h3>Pronto para começar</h3>
+            <p>Use os ícones na lateral ou<br>envie uma mensagem</p>
+          </div>
+        </div>
+        <div id="quickSuggestions"></div>
+        <div id="status"></div>
+        <div id="filePreview"></div>
+
+        <!-- Input -->
+        <div class="lkp-input-area">
+          <div class="lkp-input-top">
+            <span class="lkp-input-label">Mensagem</span>
+            <button id="enhanceBtn">✨ <span>Otimizar com IA</span></button>
+          </div>
+          <div class="lkp-input-row">
+            <button id="attachBtn" title="Anexar arquivo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+            </button>
+            <input type="file" id="fileInput" multiple style="display:none">
+            <button id="micBtn" title="Comando de voz">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            </button>
+            <textarea id="message" placeholder="Digite sua mensagem..." rows="1"></textarea>
+            <button id="sendBtn" title="Enviar">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="lkp-footer">Powered by Love King PRO &bull; Premium Edition</div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <script src="jszip.min.js"></script>
+  <script src="sidepanel.js"></script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Permissão de Microfone</title>
+  <style>
+    body {
+      background: #0a0a0a;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+    }
+    .container {
+      max-width: 400px;
+      padding: 32px;
+    }
+    h2 { font-size: 18px; margin-bottom: 12px; }
+    p { font-size: 14px; color: #a1a1a1; margin-bottom: 24px; line-height: 1.5; }
+    button {
+      padding: 12px 24px;
+      border-radius: 10px;
+      background: #2456F0;
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover { background: #3366ff; }
+    .status { margin-top: 16px; font-size: 13px; }
+    .status.success { color: #22c55e; }
+    .status.error { color: #ef4444; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🎤 Permissão de Microfone</h2>
+    <p>Para usar o reconhecimento de voz, precisamos de acesso ao seu microfone. Clique no botão abaixo para conceder a permissão.</p>
+    <button id="allowBtn">Permitir Microfone</button>
+    <div class="status" id="status"></div>
+  </div>
+  <script>
+    document.getElementById('allowBtn').addEventListener('click', async () => {
+      const statusEl = document.getElementById('status');
+      try {
+        await navigator.mediaDevices.getUserMedia({ audio: true });
+        statusEl.textContent = '✅ Permissão concedida! Pode fechar esta aba.';
+        statusEl.className = 'status success';
+      } catch (err) {
+        statusEl.textContent = '❌ Permissão negada. Verifique as configurações do navegador.';
+        statusEl.className = 'status error';
+      }
+    });
+  </script>
+</body>
+</html>

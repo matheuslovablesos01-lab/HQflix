@@ -1,0 +1,778 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Love King PRO</title>
+  <style>
+    @keyframes rgbShift {
+      0%, 100% { --rgb-r: 220; --rgb-g: 20; --rgb-b: 60; }
+      50% { --rgb-r: 200; --rgb-g: 15; --rgb-b: 50; }
+    }
+
+    @keyframes borderGlow {
+      0%, 100% { box-shadow: 0 0 20px rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.4); }
+      50% { box-shadow: 0 0 30px rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.6); }
+    }
+
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes sidebarSlideIn {
+      from { transform: translateX(-100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes sidebarSlideOut {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(-100%); opacity: 0; }
+    }
+
+    :root {
+      --rgb-r: 220;
+      --rgb-g: 20;
+      --rgb-b: 60;
+      --bg: rgb(10, 5, 10);
+      --card: rgb(20, 10, 15);
+      --border: rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.3);
+      --text: rgb(250, 245, 245);
+      --muted: rgb(200, 180, 180);
+      --sidebar-width: 220px;
+      --sidebar-collapsed: 56px;
+    }
+
+    * { 
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      width: 480px;
+      height: 580px;
+      background: radial-gradient(circle at 50% 0%, rgb(30, 10, 15), rgb(10, 5, 10), rgb(5, 2, 5));
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    /* License Screen Styles */
+    #licenseScreen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 40px;
+      background: linear-gradient(180deg, rgba(25, 10, 15, 0.95), rgba(15, 6, 10, 0.95));
+      animation: borderGlow 3s ease-in-out infinite;
+    }
+
+    .license-logo {
+      width: 80px;
+      height: 80px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, 
+        rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.3),
+        rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.1)
+      );
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 30px rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.4);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .license-logo svg {
+      width: 40px;
+      height: 40px;
+      stroke: rgb(var(--rgb-r), var(--rgb-g), var(--rgb-b));
+    }
+
+    .license-title {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, rgb(var(--rgb-r), var(--rgb-g), var(--rgb-b)), rgb(255, 255, 255));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+
+    .license-subtitle {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    .license-input-group {
+      width: 100%;
+      margin-bottom: 16px;
+    }
+
+    .license-input-group label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .license-input-group input {
+      width: 100%;
+      padding: 16px;
+      border-radius: 12px;
+      border: 2px solid rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.3);
+      background: rgba(15, 6, 10, 0.8);
+      color: var(--text);
+      font-size: 16px;
+      font-family: monospace;
+      text-align: center;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+    }
+
+    .license-input-group input:focus {
+      outline: none;
+      border-color: rgb(var(--rgb-r), var(--rgb-g), var(--rgb-b));
+      box-shadow: 0 0 25px rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.5);
+    }
+
+    #licenseStatus {
+      font-size: 13px;
+      min-height: 20px;
+      margin-bottom: 20px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    #activateBtn {
+      width: 100%;
+      padding: 16px;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgb(var(--rgb-r), var(--rgb-g), var(--rgb-b)), rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.8));
+      color: white;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 30px rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.5);
+      transition: all 0.3s ease;
+    }
+
+    #activateBtn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.7);
+    }
+
+    #activateBtn:disabled {
+      background: linear-gradient(135deg, rgb(60, 35, 40), rgb(50, 30, 35));
+      color: rgb(120, 80, 90);
+      box-shadow: none;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .license-footer {
+      margin-top: 32px;
+      text-align: center;
+      font-size: 11px;
+      color: rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.6);
+    }
+
+    /* Main App with Sidebar Layout */
+    #mainApp {
+      display: none;
+      height: 100%;
+      position: relative;
+    }
+
+    .app-container {
+      display: flex;
+      height: 100%;
+      width: 100%;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: var(--sidebar-width);
+      min-width: var(--sidebar-width);
+      height: 100%;
+      background: linear-gradient(180deg, rgba(20, 8, 12, 0.98), rgba(12, 5, 8, 0.98));
+      border-right: 2px solid rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.3);
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      z-index: 10;
+    }
+
+    .sidebar.collapsed {
+      width: var(--sidebar-collapsed);
+      min-width: var(--sidebar-collapsed);
+    }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px;
+      border-bottom: 1px solid rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.2);
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      overflow: hidden;
+    }
+
+    .sidebar-logo {
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, 
+        rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.4),
+        rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.2)
+      );
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.3);
+    }
+
+    .sidebar-logo svg {
+      width: 18px;
+      height: 18px;
+      stroke: rgb(var(--rgb-r), var(--rgb-g), var(--rgb-b));
+    }
+
+    .sidebar-title {
+      font-size: 16px;
+      font-weight: 700;
+      background: linear-gradient(135deg, rgb(var(--rgb-r), var(--rgb-g), var(--rgb-b)), rgb(255, 255, 255));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      white-space: nowrap;
+      opacity: 1;
+      transition: opacity 0.2s ease;
+    }
+
+    .sidebar.collapsed .sidebar-title {
+      opacity: 0;
+      width: 0;
+    }
+
+    .sidebar-toggle {
+      width: 28px;
+      height: 28px;
+      min-width: 28px;
+      border-radius: 6px;
+      background: rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.15);
+      border: 1px solid rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.3);
+      color: rgb(var(--rgb-r), var(--rgb-g), var(--rgb-b));
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .sidebar-toggle:hover {
+      background: rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.25);
+    }
+
+    .sidebar-toggle svg {
+      width: 16px;
+      height: 16px;
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar.collapsed .sidebar-toggle svg {
+      transform: rotate(180deg);
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 12px 8px;
+      overflow-y: auto;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 10px;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: 4px;
+      overflow: hidden;
+    }
+
+    .nav-item:hover {
+      background: rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.15);
+      color: var(--text);
+    }
+
+    .nav-item.active {
+      background: linear-gradient(135deg, 
+        rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.3),
+        rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.15)
+      );
+      color: var(--text);
+      box-shadow: 0 2px 10px rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.2);
+    }
+
+    .nav-item svg {
+      width: 20px;
+      height: 20px;
+      min-width: 20px;
+    }
+
+    .nav-item span {
+      white-space: nowrap;
+      opacity: 1;
+      transition: opacity 0.2s ease;
+    }
+
+    .sidebar.collapsed .nav-item span {
+      opacity: 0;
+      width: 0;
+    }
+
+    .sidebar-footer {
+      padding: 12px;
+      border-top: 1px solid rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.2);
+    }
+
+    .license-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: rgba(0, 255, 136, 0.1);
+      border: 1px solid rgba(0, 255, 136, 0.3);
+      font-size: 11px;
+      color: #00ff88;
+      overflow: hidden;
+    }
+
+    .license-badge.warning {
+      background: rgba(255, 170, 0, 0.1);
+      border-color: rgba(255, 170, 0, 0.3);
+      color: #ffaa00;
+    }
+
+    .license-badge svg {
+      width: 16px;
+      height: 16px;
+      min-width: 16px;
+    }
+
+    .license-badge span {
+      white-space: nowrap;
+      opacity: 1;
+      transition: opacity 0.2s ease;
+    }
+
+    .sidebar.collapsed .license-badge span {
+      opacity: 0;
+      width: 0;
+    }
+
+    .logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      padding: 10px 12px;
+      margin-top: 8px;
+      border-radius: 8px;
+      background: none;
+      border: 1px solid rgba(255, 100, 100, 0.2);
+      color: var(--muted);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      overflow: hidden;
+    }
+
+    .logout-btn:hover {
+      background: rgba(255, 100, 100, 0.1);
+      border-color: rgba(255, 100, 100, 0.4);
+      color: #ff6666;
+    }
+
+    .logout-btn svg {
+      width: 16px;
+      height: 16px;
+      min-width: 16px;
+    }
+
+    .logout-btn span {
+      white-space: nowrap;
+      opacity: 1;
+      transition: opacity 0.2s ease;
+    }
+
+    .sidebar.collapsed .logout-btn span {
+      opacity: 0;
+      width: 0;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(25, 10, 15, 0.95), rgba(15, 6, 10, 0.95));
+    }
+
+    .content-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 18px;
+      background: linear-gradient(135deg,
+        rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.12),
+        rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.04)
+      );
+      border-bottom: 1px solid rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.2);
+    }
+
+    .content-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .status {
+      font-size: 12px;
+      color: rgb(var(--rgb-r), var(--rgb-g), var(--rgb-b));
+      font-weight: 500;
+    }
+
+    .history {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 14px 18px;
+      background: rgba(10, 5, 10, 0.4);
+    }
+
+    .history::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .history::-webkit-scrollbar-track {
+      background: rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.1);
+      border-radius: 10px;
+    }
+
+    .history::-webkit-scrollbar-thumb {
+      background: rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.4);
+      border-radius: 10px;
+    }
+
+    .bubble {
+      max-width: 85%;
+      padding: 12px 16px;
+      border-radius: 16px;
+      font-size: 13px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+      animation: slideIn 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .bot {
+      background: linear-gradient(135deg, rgba(50, 20, 30, 0.9), rgba(40, 15, 25, 0.9));
+      align-self: flex-start;
+      border: 1px solid rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.25);
+    }
+
+    .user {
+      background: linear-gradient(135deg,
+        rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.9),
+        rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.7)
+      );
+      color: white;
+      align-self: flex-end;
+      box-shadow: 0 4px 20px rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.4);
+    }
+
+    .input-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      padding: 14px 18px;
+      background: linear-gradient(180deg,
+        rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.08),
+        rgba(20, 10, 15, 0.8)
+      );
+      border-top: 1px solid rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.2);
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 50px;
+      max-height: 120px;
+      resize: vertical;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.3);
+      background: rgba(15, 6, 10, 0.8);
+      color: var(--text);
+      font-size: 13px;
+      font-family: inherit;
+      transition: all 0.3s ease;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: rgb(var(--rgb-r), var(--rgb-g), var(--rgb-b));
+      box-shadow: 0 0 20px rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.4);
+    }
+
+    textarea::placeholder {
+      color: rgba(200, 180, 180, 0.5);
+    }
+
+    button.send-btn {
+      background: linear-gradient(135deg,
+        rgb(var(--rgb-r), var(--rgb-g), var(--rgb-b)),
+        rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.8)
+      );
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 13px;
+      min-width: 80px;
+      box-shadow: 0 4px 20px rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.4);
+      transition: all 0.2s ease;
+    }
+
+    button.send-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.6);
+    }
+
+    button.send-btn:disabled {
+      background: linear-gradient(135deg, rgb(60, 35, 40), rgb(50, 30, 35));
+      color: rgb(120, 80, 90);
+      box-shadow: none;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: var(--muted);
+      text-align: center;
+      padding: 20px;
+    }
+
+    .empty-state svg {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    .empty-state p {
+      font-size: 13px;
+      max-width: 200px;
+    }
+
+    /* ===== MODE SELECTOR ===== */
+    .dl-mode-selector {
+      display: flex;
+      background: rgba(15, 6, 10, 0.8);
+      border: 1px solid rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.3);
+      border-radius: 10px;
+      padding: 3px;
+      margin-bottom: 4px;
+      gap: 4px;
+    }
+
+    .dl-mode-btn {
+      flex: 1;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .dl-mode-btn:hover {
+      color: var(--text);
+      background: rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.1);
+    }
+
+    .dl-mode-btn.active {
+      background: linear-gradient(135deg, rgb(var(--rgb-r), var(--rgb-g), var(--rgb-b)), rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.8));
+      color: white;
+      border: none;
+      box-shadow: 0 4px 15px rgba(var(--rgb-r), var(--rgb-g), var(--rgb-b), 0.3);
+    }
+  </style>
+</head>
+<body>
+  <!-- License Activation Screen -->
+  <div id="licenseScreen">
+    <div class="license-logo">
+      <img src="logo.png" alt="Love King PRO" style="width: 40px; height: 40px; object-fit: contain;">
+    </div>
+    <h1 class="license-title">LOVE KING PRO</h1>
+    <p class="license-subtitle">Ative sua licença para continuar</p>
+    
+    <div class="license-input-group">
+      <label>Chave de Licença</label>
+      <input type="text" id="licenseKey" placeholder="XXXX-XXXX-XXXX-XXXX" maxlength="19" autocomplete="off">
+    </div>
+    
+    <div id="licenseStatus"></div>
+    
+    <button id="activateBtn">Ativar Licença</button>
+    
+    <div class="license-footer">
+      Love King PRO &copy; 2025 - Todos os direitos reservados
+    </div>
+  </div>
+
+  <!-- Main Application -->
+  <div id="mainApp">
+    <div class="app-container">
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <div class="sidebar-brand">
+            <div class="sidebar-logo">
+              <img src="logo.png" alt="Love King PRO" style="width: 18px; height: 18px; object-fit: contain;">
+            </div>
+            <span class="sidebar-title">LOVE KING PRO</span>
+          </div>
+          <button class="sidebar-toggle" id="sidebarToggle" title="Alternar sidebar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M15 18l-6-6 6-6"/>
+            </svg>
+          </button>
+        </div>
+
+        <nav class="sidebar-nav">
+          <div class="nav-item active" data-view="chat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+            <span>Chat</span>
+          </div>
+          <div class="nav-item" data-view="history" id="navHistory">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+            <span>Histórico</span>
+          </div>
+          <div class="nav-item" data-view="settings" id="navSettings">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+            <span>Configurações</span>
+          </div>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="license-badge" id="licenseBadge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            <span id="licenseInfo">Licença ativa</span>
+          </div>
+          <button class="logout-btn" id="logoutLicenseBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+              <polyline points="16 17 21 12 16 7"/>
+              <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+            <span id="logoutBtn">Sair da Licença</span>
+          </button>
+        </div>
+      </aside>
+
+      <!-- Main Content Area -->
+      <main class="main-content">
+        <header class="content-header">
+          <span class="content-title" id="contentTitle">Chat</span>
+          <span class="status" id="status">Conectando...</span>
+        </header>
+
+        <div class="history" id="history">
+          <div class="empty-state">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+            <p>Envie uma mensagem para começar</p>
+          </div>
+        </div>
+
+        <!-- Mode Selector -->
+        <div style="padding: 0 18px; margin-top: 10px;">
+          <div class="dl-mode-selector">
+            <button class="dl-mode-btn active" id="dl-mode-fast" data-mode="fast">⚡ Fast</button>
+            <button class="dl-mode-btn" id="dl-mode-thinking" data-mode="thinking">🧠 Thinking</button>
+          </div>
+        </div>
+
+        <div class="input-row">
+          <textarea id="message" placeholder="Digite sua mensagem..." rows="1"></textarea>
+          <button class="send-btn" id="sendBtn">Enviar</button>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
